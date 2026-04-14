@@ -58,6 +58,7 @@ input {
 .summary-section,
 .table-panel,
 .pivot-section,
+.fuzzy-section,
 .footer-note {
   background: linear-gradient(180deg, rgba(17, 23, 35, 0.98), rgba(11, 17, 27, 0.98));
   border: 1px solid var(--line);
@@ -298,6 +299,7 @@ input {
 .watchlist-section,
 .summary-section,
 .pivot-section,
+.fuzzy-section,
 .footer-note {
   margin-top: 18px;
   border-radius: 24px;
@@ -529,6 +531,31 @@ input {
   overflow-x: auto;
 }
 
+.fuzzy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.fuzzy-card {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
+  background: linear-gradient(180deg, rgba(19, 28, 43, 0.86), rgba(12, 18, 29, 0.96));
+}
+
+.fuzzy-card h3 {
+  margin: 0 0 10px;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.fuzzy-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .summary-card h3 {
   margin: 0 0 14px;
 }
@@ -669,6 +696,7 @@ tbody tr:last-child td {
 
 @media (max-width: 960px) {
   .snapshot-grid,
+  .fuzzy-grid,
   .gauge-grid {
     grid-template-columns: 1fr;
   }
@@ -704,6 +732,7 @@ tbody tr:last-child td {
   .snapshot-section,
   .summary-section,
   .pivot-section,
+  .fuzzy-section,
   .footer-note,
   .table-panel {
     padding: 18px;
