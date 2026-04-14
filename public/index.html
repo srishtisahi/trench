@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trench Technicals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <span class="brand-mark">T</span>
+          <div>
+            <p class="eyebrow">Technicals Terminal</p>
+            <h1>Trench</h1>
+          </div>
+        </div>
+
+        <form id="ticker-form" class="ticker-form">
+          <label class="visually-hidden" for="ticker-input">Ticker</label>
+          <input id="ticker-input" name="ticker" type="text" value="NVDA" autocomplete="off" />
+          <button type="submit">Open</button>
+        </form>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="breadcrumbs">Markets / Stocks / Technicals</p>
+            <div class="title-row">
+              <div>
+                <p id="company-name" class="company-name">NVIDIA Corporation</p>
+                <div class="symbol-row">
+                  <span id="symbol-chip" class="symbol-chip">NVDA</span>
+                  <span id="exchange-label" class="exchange-label">Nasdaq Stock Market</span>
+                </div>
+              </div>
+              <div class="price-block">
+                <p id="market-state" class="market-state">Market closed</p>
+                <div class="price-row">
+                  <span id="price-current">--</span>
+                  <span id="price-change" class="price-change">--</span>
+                </div>
+              </div>
+            </div>
+
+            <nav class="tabs" aria-label="Sections">
+              <a href="#" class="tab">Overview</a>
+              <a href="#" class="tab">Financials</a>
+              <a href="#" class="tab">News</a>
+              <a href="#" class="tab active">Technicals</a>
+              <a href="#" class="tab">Forecasts</a>
+            </nav>
+          </div>
+        </section>
+
+        <section class="summary-section">
+          <div class="section-head">
+            <div>
+              <p class="section-eyebrow">Indicators</p>
+              <h2>Indicators' summary</h2>
+            </div>
+            <p class="section-note">
+              Technical snapshot from moving averages, oscillators, and pivots for the selected
+              timeframe.
+            </p>
+          </div>
+
+          <div id="timeframe-bar" class="timeframe-bar"></div>
+
+          <div class="gauge-grid">
+            <article class="summary-card">
+              <h3>Oscillators</h3>
+              <div id="oscillators-gauge"></div>
+            </article>
+            <article class="summary-card">
+              <h3>Summary</h3>
+              <div id="summary-gauge"></div>
+            </article>
+            <article class="summary-card">
+              <h3>Moving Averages</h3>
+              <div id="ma-gauge"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="tables-section">
+          <div class="table-panel">
+            <div class="panel-head">
+              <h3>Oscillators</h3>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Value</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="oscillators-table"></tbody>
+            </table>
+          </div>
+
+          <div class="table-panel">
+            <div class="panel-head">
+              <h3>Moving Averages</h3>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Value</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="moving-averages-table"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="pivot-section">
+          <div class="panel-head">
+            <h3>Pivots</h3>
+          </div>
+          <table>
+            <thead>
+              <tr id="pivot-head-row"></tr>
+            </thead>
+            <tbody id="pivot-table"></tbody>
+          </table>
+        </section>
+
+        <footer class="footer-note">
+          <p>
+            This page is for market analysis only and is not investment advice. Data is fetched
+            from Yahoo Finance and the indicator logic is computed locally.
+          </p>
+          <p id="updated-at">Updated just now</p>
+        </footer>
+      </main>
+    </div>
+
+    <template id="gauge-template">
+      <div class="gauge">
+        <div class="gauge-label"></div>
+        <svg viewBox="0 0 220 140" class="gauge-svg" aria-hidden="true">
+          <path
+            class="gauge-track"
+            d="M20 120 A90 90 0 0 1 200 120"
+            pathLength="100"
+          ></path>
+          <path
+            class="gauge-progress"
+            d="M20 120 A90 90 0 0 1 200 120"
+            pathLength="100"
+          ></path>
+          <line class="gauge-pointer" x1="110" y1="120" x2="110" y2="46"></line>
+          <circle class="gauge-center" cx="110" cy="120" r="6"></circle>
+        </svg>
+        <div class="gauge-scale">
+          <span>Strong sell</span>
+          <span>Sell</span>
+          <span>Neutral</span>
+          <span>Buy</span>
+          <span>Strong buy</span>
+        </div>
+        <div class="gauge-counts">
+          <span class="sell-count"></span>
+          <span class="neutral-count"></span>
+          <span class="buy-count"></span>
+        </div>
+      </div>
+    </template>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,499 @@
+:root {
+  --bg: #0a0d14;
+  --panel: #111723;
+  --panel-2: #131c2b;
+  --line: rgba(255, 255, 255, 0.08);
+  --muted: #8d98aa;
+  --text: #ecf1f9;
+  --buy: #00c076;
+  --buy-soft: rgba(0, 192, 118, 0.16);
+  --sell: #ff4d57;
+  --sell-soft: rgba(255, 77, 87, 0.16);
+  --neutral: #9aa5b1;
+  --neutral-soft: rgba(154, 165, 177, 0.16);
+  --accent: #4da3ff;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(77, 163, 255, 0.18), transparent 32%),
+    radial-gradient(circle at top right, rgba(0, 192, 118, 0.14), transparent 26%),
+    linear-gradient(180deg, #0a0d14 0%, #09111d 100%);
+  color: var(--text);
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+body.is-loading::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 18, 0.38);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.page-shell {
+  width: min(1220px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 20px 0 40px;
+}
+
+.topbar,
+.hero,
+.summary-section,
+.table-panel,
+.pivot-section,
+.footer-note {
+  background: linear-gradient(180deg, rgba(17, 23, 35, 0.98), rgba(11, 17, 27, 0.98));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-radius: 22px;
+  position: sticky;
+  top: 12px;
+  z-index: 10;
+  backdrop-filter: blur(16px);
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-lockup h1,
+.section-head h2,
+.panel-head h3 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4da3ff, #00c076);
+  color: white;
+  font-weight: 700;
+}
+
+.eyebrow,
+.section-eyebrow,
+.breadcrumbs {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.ticker-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ticker-form input {
+  width: 160px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 12px 14px;
+  text-transform: uppercase;
+}
+
+.ticker-form button,
+.timeframe-pill {
+  border: 0;
+  cursor: pointer;
+}
+
+.ticker-form button {
+  padding: 12px 18px;
+  border-radius: 12px;
+  color: #07111b;
+  background: linear-gradient(135deg, #d8e7ff, #89c2ff);
+  font-weight: 600;
+}
+
+.hero {
+  margin-top: 18px;
+  border-radius: 28px;
+  padding: 28px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent);
+  pointer-events: none;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+}
+
+.company-name {
+  margin: 0;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.symbol-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.symbol-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  font-weight: 700;
+}
+
+.exchange-label,
+.market-state,
+.section-note,
+.footer-note {
+  color: var(--muted);
+}
+
+.price-block {
+  text-align: right;
+}
+
+.price-row {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-end;
+  align-items: baseline;
+}
+
+#price-current {
+  font-size: clamp(30px, 3.4vw, 48px);
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.price-change.up {
+  color: var(--buy);
+}
+
+.price-change.down {
+  color: var(--sell);
+}
+
+.tabs {
+  margin-top: 26px;
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  color: var(--muted);
+  text-decoration: none;
+  padding-bottom: 10px;
+  border-bottom: 2px solid transparent;
+}
+
+.tab.active {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.summary-section,
+.pivot-section,
+.footer-note {
+  margin-top: 18px;
+  border-radius: 24px;
+  padding: 24px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-end;
+}
+
+.section-note {
+  max-width: 520px;
+  margin: 0;
+}
+
+.timeframe-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.timeframe-pill {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 10px 14px;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.timeframe-pill:hover,
+.timeframe-pill.active {
+  background: rgba(77, 163, 255, 0.16);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.gauge-grid,
+.tables-section {
+  display: grid;
+  gap: 18px;
+}
+
+.gauge-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 22px;
+}
+
+.summary-card,
+.table-panel {
+  background: linear-gradient(180deg, rgba(19, 28, 43, 0.86), rgba(12, 18, 29, 0.96));
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 20px;
+}
+
+.summary-card h3 {
+  margin: 0 0 14px;
+}
+
+.gauge-label {
+  font-size: 28px;
+  font-family: "Space Grotesk", sans-serif;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.gauge-svg {
+  width: 100%;
+  max-width: 260px;
+  display: block;
+  margin: 0 auto;
+}
+
+.gauge-track,
+.gauge-progress {
+  fill: none;
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+
+.gauge-track {
+  stroke: rgba(255, 255, 255, 0.08);
+}
+
+.gauge-progress {
+  transition: stroke-dashoffset 260ms ease;
+}
+
+.gauge-pointer {
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: transform 260ms ease;
+}
+
+.gauge-center {
+  fill: var(--text);
+}
+
+.gauge-scale,
+.gauge-counts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.gauge-scale {
+  margin-top: 6px;
+}
+
+.gauge-scale span:first-child,
+.gauge-scale span:last-child {
+  line-height: 1.1;
+}
+
+.gauge-counts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.tables-section {
+  grid-template-columns: 1fr;
+  margin-top: 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px 0;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+th {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.action-pill {
+  display: inline-flex;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.action-pill.buy {
+  color: var(--buy);
+  background: var(--buy-soft);
+}
+
+.action-pill.sell {
+  color: #ff8b75;
+  background: rgba(255, 122, 47, 0.18);
+}
+
+.action-pill.neutral {
+  color: var(--neutral);
+  background: var(--neutral-soft);
+}
+
+.footer-note {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@media (max-width: 960px) {
+  .gauge-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .title-row,
+  .section-head,
+  .footer-note,
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .price-block,
+  .price-row {
+    text-align: left;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    width: min(100% - 20px, 1220px);
+  }
+
+  .hero,
+  .summary-section,
+  .pivot-section,
+  .footer-note,
+  .table-panel {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .ticker-form {
+    width: 100%;
+  }
+
+  .ticker-form input {
+    flex: 1;
+  }
+
+  .gauge-scale {
+    font-size: 10px;
+  }
+
+  th,
+  td {
+    font-size: 13px;
+  }
+}
