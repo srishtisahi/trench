@@ -27,7 +27,7 @@ const TIMEFRAMES = [
   { key: "4H", label: "4 hours", fetchInterval: "60m", range: "6mo", aggregate: 4 },
   { key: "1D", label: "1 day", fetchInterval: "1d", range: "1y" },
   { key: "1W", label: "1 week", fetchInterval: "1wk", range: "5y" },
-  { key: "1MO", label: "1 month", fetchInterval: "1mo", range: "10y" },
+  { key: "1MO", label: "1 month", fetchInterval: "1mo", range: "20y" },
 ];
 
 const SUMMARY_SCALE = ["Strong Sell", "Sell", "Neutral", "Buy", "Strong Buy"];
@@ -291,13 +291,20 @@ function computePivots(candles) {
 
 function getPeriod1(range) {
   const now = new Date();
-  const value = Number(range.slice(0, -1));
-  const unit = range.slice(-1);
+  const match = /^(\d+)(d|mo|y)$/i.exec(String(range).trim());
   const start = new Date(now);
+
+  if (!match) {
+    start.setFullYear(start.getFullYear() - 1);
+    return start;
+  }
+
+  const value = Number(match[1]);
+  const unit = match[2].toLowerCase();
 
   if (unit === "d") {
     start.setDate(start.getDate() - value);
-  } else if (unit === "m") {
+  } else if (unit === "mo") {
     start.setMonth(start.getMonth() - value);
   } else if (unit === "y") {
     start.setFullYear(start.getFullYear() - value);
@@ -309,7 +316,7 @@ function getPeriod1(range) {
 }
 
 function computeIndicators(candles) {
-  if (candles.length < 220) {
+  if (candles.length < 30) {
     throw new Error("Not enough market history to calculate the technicals.");
   }
 

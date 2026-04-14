@@ -25,7 +25,16 @@
 
         <form id="ticker-form" class="ticker-form">
           <label class="visually-hidden" for="ticker-input">Ticker</label>
-          <input id="ticker-input" name="ticker" type="text" value="NVDA" autocomplete="off" />
+          <input
+            id="ticker-input"
+            name="ticker"
+            type="text"
+            value="NVDA"
+            autocomplete="off"
+            list="ticker-suggestions"
+            placeholder="Search ticker"
+          />
+          <datalist id="ticker-suggestions"></datalist>
           <button type="submit">Open</button>
         </form>
       </header>
@@ -51,13 +60,77 @@
               </div>
             </div>
 
-            <nav class="tabs" aria-label="Sections">
-              <a href="#" class="tab">Overview</a>
-              <a href="#" class="tab">Financials</a>
-              <a href="#" class="tab">News</a>
-              <a href="#" class="tab active">Technicals</a>
-              <a href="#" class="tab">Forecasts</a>
-            </nav>
+            <div class="tabs" aria-label="Sections">
+              <span class="tab muted">Overview</span>
+              <span class="tab muted">Financials</span>
+              <span class="tab muted">News</span>
+              <span class="tab active">Technicals</span>
+              <span class="tab muted">Forecasts</span>
+            </div>
+
+            <div class="hero-actions">
+              <button id="save-symbol-button" type="button" class="ghost-button">
+                Save Symbol
+              </button>
+              <button id="copy-link-button" type="button" class="ghost-button">
+                Copy Link
+              </button>
+            </div>
+
+            <p id="status-banner" class="status-banner" hidden></p>
+          </div>
+        </section>
+
+        <section class="snapshot-section">
+          <div class="section-head">
+            <div>
+              <p class="section-eyebrow">Snapshot</p>
+              <h2>At a glance</h2>
+            </div>
+            <p class="section-note">
+              Quick read on the selected symbol before diving into the indicator tables.
+            </p>
+          </div>
+
+          <div id="snapshot-grid" class="snapshot-grid"></div>
+        </section>
+
+        <section class="watchlist-section">
+          <div class="watchlist-head">
+            <div>
+              <p class="section-eyebrow">Symbols</p>
+              <h2>Quick picks</h2>
+            </div>
+            <p class="section-note">Preset stocks plus your recent lookups for faster switching.</p>
+          </div>
+
+          <div class="watchlist-tools">
+            <div class="filter-input-wrap">
+              <label class="visually-hidden" for="stock-filter-input">Filter stocks</label>
+              <input
+                id="stock-filter-input"
+                class="filter-input"
+                type="text"
+                placeholder="Filter by symbol or name"
+                autocomplete="off"
+              />
+            </div>
+            <div id="stock-groups" class="group-row"></div>
+          </div>
+
+          <div class="watchlist-block">
+            <p class="watchlist-label">Saved</p>
+            <div id="saved-stocks" class="stock-chip-row"></div>
+          </div>
+
+          <div class="watchlist-block">
+            <p class="watchlist-label">Recent</p>
+            <div id="recent-stocks" class="stock-chip-row"></div>
+          </div>
+
+          <div class="watchlist-block">
+            <p class="watchlist-label">Popular</p>
+            <div id="stock-list" class="stock-chip-row"></div>
           </div>
         </section>
 
