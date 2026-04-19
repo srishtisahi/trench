@@ -81,6 +81,92 @@
           </div>
         </section>
 
+        <section class="decision-section">
+          <div class="section-head">
+            <div>
+              <p class="section-eyebrow">Decision Workspace</p>
+              <h2>Fuzzy decision cockpit</h2>
+            </div>
+            <p class="section-note">
+              Technical indicators are fused into a soft-computing score so ambiguous conditions
+              can still produce interpretable actions.
+            </p>
+          </div>
+
+          <div class="decision-grid">
+            <article class="decision-panel score-panel">
+              <div class="panel-head">
+                <h3>Fuzzy score</h3>
+                <span id="regime-chip" class="mini-chip">Neutral</span>
+              </div>
+              <div class="score-wrap">
+                <div class="score-main">
+                  <p id="fuzzy-score" class="score-value">0.00</p>
+                  <p id="fuzzy-score-caption" class="score-caption">Balanced evidence</p>
+                </div>
+                <div class="confidence-block">
+                  <p class="micro-label">Confidence</p>
+                  <p id="fuzzy-confidence" class="confidence-value">0%</p>
+                </div>
+              </div>
+              <div class="membership-stack">
+                <div id="membership-bars" class="membership-bars"></div>
+              </div>
+              <div id="signal-badges" class="signal-badges"></div>
+            </article>
+
+            <article class="decision-panel summary-panel">
+              <div class="panel-head">
+                <h3>AI summary</h3>
+                <span class="micro-note">Local explanation mode</span>
+              </div>
+              <p id="ai-summary-headline" class="ai-summary-headline">
+                The dashboard is waiting for fresh market data.
+              </p>
+              <p id="ai-summary-body" class="ai-summary-body">
+                Once loaded, this panel summarizes the dominant trend, strongest technical
+                conflicts, and the fuzzy inference outcome that can later be handed to an LLM.
+              </p>
+              <div id="ai-summary-points" class="insight-list"></div>
+            </article>
+
+            <article class="decision-panel trend-panel">
+              <div class="panel-head">
+                <h3>Trend pulse</h3>
+                <span id="trend-direction-chip" class="mini-chip">Stable</span>
+              </div>
+              <svg id="sparkline-chart" class="sparkline-chart" viewBox="0 0 520 160" preserveAspectRatio="none" aria-label="Recent price trend">
+                <defs>
+                  <linearGradient id="sparkline-gradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(77,163,255,0.68)"></stop>
+                    <stop offset="100%" stop-color="rgba(77,163,255,0.02)"></stop>
+                  </linearGradient>
+                </defs>
+                <path id="sparkline-area" class="sparkline-area"></path>
+                <path id="sparkline-line" class="sparkline-line"></path>
+              </svg>
+              <div id="trend-stats" class="trend-stats"></div>
+            </article>
+
+            <article class="decision-panel driver-panel">
+              <div class="panel-head">
+                <h3>Signal drivers</h3>
+                <span class="micro-note">Top bullish and bearish evidence</span>
+              </div>
+              <div class="driver-columns">
+                <div>
+                  <p class="micro-label">Bullish drivers</p>
+                  <div id="bullish-drivers" class="driver-list"></div>
+                </div>
+                <div>
+                  <p class="micro-label">Bearish drivers</p>
+                  <div id="bearish-drivers" class="driver-list"></div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
         <section class="snapshot-section">
           <div class="section-head">
             <div>
@@ -138,47 +224,91 @@
           <div class="section-head">
             <div>
               <p class="section-eyebrow">Soft Computing</p>
-              <h2>Fuzzy Logic View</h2>
+              <h2>Fuzzy inference model</h2>
             </div>
             <p class="section-note">
-              A simple explanation of how multiple technical signals can be blended into one
-              overall action.
+              The inference block shows how continuous indicator values are transformed into
+              memberships and rule strengths before producing a crisp action.
             </p>
           </div>
 
           <div class="fuzzy-grid">
-            <article class="fuzzy-card">
-              <h3>Membership</h3>
+            <article class="fuzzy-card theory-card">
+              <h3>Problem analysis</h3>
               <p>
-                A signal does not have to be only true or false. RSI can belong partly to
-                <strong>overbought</strong>, <strong>neutral</strong>, or <strong>oversold</strong>
-                regions.
+                Conventional screeners such as TradingView and Investing.com expose aggregated
+                technical ratings, but they usually compress the reasoning into fixed votes. This
+                dashboard keeps the summary while also exposing the fuzzy decision path, conflict
+                between indicators, and the confidence of the final action.
               </p>
             </article>
 
-            <article class="fuzzy-card">
-              <h3>Rule Example</h3>
+            <article class="fuzzy-card theory-card">
+              <h3>Project design</h3>
               <p>
-                If <strong>RSI is low</strong> AND <strong>MACD is bullish</strong>, then the market
-                has a stronger membership in <strong>Buy</strong>.
+                The system follows a pipeline: market data acquisition, technical-indicator
+                extraction, membership assignment, rule aggregation, defuzzified output, and an
+                explanation layer. That makes the architecture modular enough for future AI
+                summarization and alternative rule sets.
               </p>
             </article>
 
-            <article class="fuzzy-card">
-              <h3>Aggregation</h3>
+            <article class="fuzzy-card theory-card">
+              <h3>Functionality</h3>
               <p>
-                Many indicator outputs are combined together. More buy-like evidence pushes the
-                final signal toward <strong>Buy</strong> or <strong>Strong Buy</strong>.
+                The workspace supports multi-timeframe technicals, indicator tables, pivots, saved
+                tickers, dynamic watchlists, signal-driver tracing, and a local summary block that
+                can later be replaced by a model-generated narrative.
               </p>
             </article>
 
-            <article class="fuzzy-card">
-              <h3>Defuzzified Output</h3>
+            <article class="fuzzy-card theory-card">
+              <h3>Relevance</h3>
               <p>
-                The final label such as <strong>Sell</strong>, <strong>Neutral</strong>, or
-                <strong>Strong Buy</strong> is the crisp decision produced from those blended
-                memberships.
+                Stock behavior is uncertain, nonlinear, and noisy, which fits soft computing well.
+                Fuzzy logic handles partial truth directly: RSI can be partially oversold while
+                momentum is only mildly bullish, so the output becomes a graded recommendation
+                rather than a brittle yes-or-no trigger.
               </p>
+            </article>
+          </div>
+
+          <div class="rule-layout">
+            <article class="decision-panel rule-panel">
+              <div class="panel-head">
+                <h3>Activated rules</h3>
+                <span class="micro-note">Current symbol and timeframe</span>
+              </div>
+              <div id="rule-list" class="rule-list"></div>
+            </article>
+
+            <article class="decision-panel architecture-panel">
+              <div class="panel-head">
+                <h3>System map</h3>
+                <span class="micro-note">Design overview</span>
+              </div>
+              <div class="pipeline-steps">
+                <div class="pipeline-step">
+                  <span>1</span>
+                  <p>Fetch OHLCV price history and live quote metadata.</p>
+                </div>
+                <div class="pipeline-step">
+                  <span>2</span>
+                  <p>Compute oscillators, moving averages, and pivot levels.</p>
+                </div>
+                <div class="pipeline-step">
+                  <span>3</span>
+                  <p>Map indicator outputs to fuzzy buy, neutral, and sell memberships.</p>
+                </div>
+                <div class="pipeline-step">
+                  <span>4</span>
+                  <p>Aggregate rules into a defuzzified score and confidence value.</p>
+                </div>
+                <div class="pipeline-step">
+                  <span>5</span>
+                  <p>Publish action labels, driver breakdown, and summary insights.</p>
+                </div>
+              </div>
             </article>
           </div>
         </section>

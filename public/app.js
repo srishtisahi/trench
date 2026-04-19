@@ -28,6 +28,22 @@ const elements = {
   saveSymbolButton: document.getElementById("save-symbol-button"),
   copyLinkButton: document.getElementById("copy-link-button"),
   snapshotGrid: document.getElementById("snapshot-grid"),
+  fuzzyScore: document.getElementById("fuzzy-score"),
+  fuzzyScoreCaption: document.getElementById("fuzzy-score-caption"),
+  fuzzyConfidence: document.getElementById("fuzzy-confidence"),
+  regimeChip: document.getElementById("regime-chip"),
+  membershipBars: document.getElementById("membership-bars"),
+  signalBadges: document.getElementById("signal-badges"),
+  aiSummaryHeadline: document.getElementById("ai-summary-headline"),
+  aiSummaryBody: document.getElementById("ai-summary-body"),
+  aiSummaryPoints: document.getElementById("ai-summary-points"),
+  sparklineArea: document.getElementById("sparkline-area"),
+  sparklineLine: document.getElementById("sparkline-line"),
+  trendDirectionChip: document.getElementById("trend-direction-chip"),
+  trendStats: document.getElementById("trend-stats"),
+  bullishDrivers: document.getElementById("bullish-drivers"),
+  bearishDrivers: document.getElementById("bearish-drivers"),
+  ruleList: document.getElementById("rule-list"),
 };
 
 const INITIAL_STOCKS = [
@@ -127,6 +143,11 @@ function formatNumber(value, options = {}) {
   }).format(value);
 }
 
+function formatPercent(value) {
+  if (value == null || Number.isNaN(value)) return "—";
+  return `${value > 0 ? "+" : ""}${formatNumber(value)}%`;
+}
+
 function formatPrice(value, currency = "USD") {
   if (value == null || Number.isNaN(value)) return "—";
 
@@ -176,8 +197,14 @@ function flashButton(button, nextLabel, defaultLabel, timerName) {
   }, 1400);
 }
 
-function actionClass(action) {
+function actionClass(action = "Neutral") {
   return action.toLowerCase().replace(/\s+/g, "-");
+}
+
+function toneClassFromLabel(label = "Neutral") {
+  if (/buy/i.test(label)) return "buy";
+  if (/sell/i.test(label)) return "sell";
+  return "neutral";
 }
 
 function getStockMeta(symbol) {
@@ -197,7 +224,7 @@ function writeStorage(key, value) {
   try {
     window.localStorage.setItem(key, JSON.stringify(value));
   } catch (_error) {
-    // Storage failure should not break the dashboard.
+    // Ignore local storage failures.
   }
 }
 
@@ -318,10 +345,7 @@ function renderSnapshot(data) {
     },
     {
       label: "Session Move",
-      value:
-        data.price.change == null
-          ? "—"
-          : `${data.price.change > 0 ? "+" : ""}${formatNumber(data.price.changePercent)}%`,
+      value: data.price.change == null ? "—" : formatPercent(data.price.changePercent),
       tone:
         data.price.change == null
           ? "neutral"
@@ -336,8 +360,32 @@ function renderSnapshot(data) {
     {
       label: "Overall Bias",
       value: data.summaries.summary.recommendation,
-      tone: actionClass(data.summaries.summary.recommendation.includes("Sell") ? "sell" : data.summaries.summary.recommendation.includes("Buy") ? "buy" : "neutral"),
-      detail: `${data.summaries.summary.counts.buy} buy / ${data.summaries.summary.counts.sell} sell`,
+      tone: toneClassFromLabel(data.summaries.summary.recommendation),
+      detail: `${data.signalMix.bullish} bullish / ${data.signalMix.bearish} bearish / ${data.signalMix.neutral} neutral`,
+    },
+    {
+      label: "Fuzzy Label",
+      value: data.fuzzy.label,
+      tone: toneClassFromLabel(data.fuzzy.label),
+      detail: `${data.fuzzy.confidence}% confidence`,
+    },
+    {
+      label: "Trend Direction",
+      value: data.trend.direction,
+      tone: toneClassFromLabel(data.trend.direction === "Uptrend" ? "Buy" : data.trend.direction === "Downtrend" ? "Sell" : "Neutral"),
+      detail: `${formatPercent(data.trend.changePercent)} over recent bars`,
+    },
+    {
+      label: "Support",
+      value: formatPrice(data.trend.support, data.currency),
+      tone: "neutral",
+      detail: "Recent low in the trend sample",
+    },
+    {
+      label: "Resistance",
+      value: formatPrice(data.trend.resistance, data.currency),
+      tone: "neutral",
+      detail: "Recent high in the trend sample",
     },
   ];
 
@@ -349,6 +397,148 @@ function renderSnapshot(data) {
           <p class="snapshot-value">${card.value}</p>
           <p class="snapshot-detail">${card.detail}</p>
         </article>
+      `
+    )
+    .join("");
+}
+
+function renderFuzzyPanel(data) {
+  const { fuzzy, signalMix } = data;
+  const regimeClass = toneClassFromLabel(fuzzy.label);
+  elements.fuzzyScore.textContent = formatNumber(fuzzy.score);
+  elements.fuzzyScore.style.color = data.summaries.summary.color;
+  elements.fuzzyScoreCaption.textContent = fuzzy.biasText;
+  elements.fuzzyConfidence.textContent = `${formatNumber(fuzzy.confidence, { maximumFractionDigits: 0 })}%`;
+  elements.regimeChip.textContent = fuzzy.label;
+  elements.regimeChip.className = `mini-chip ${regimeClass}`;
+
+  const membershipEntries = [
+    ["Strong Sell", fuzzy.memberships.strongSell],
+    ["Sell", fuzzy.memberships.sell],
+    ["Neutral", fuzzy.memberships.neutral],
+    ["Buy", fuzzy.memberships.buy],
+    ["Strong Buy", fuzzy.memberships.strongBuy],
+  ];
+
+  elements.membershipBars.innerHTML = membershipEntries
+    .map(
+      ([label, value]) => `
+        <div class="membership-row">
+          <span class="membership-name">${label}</span>
+          <div class="membership-track">
+            <div class="membership-fill" style="width: ${Math.max(0, Math.min(100, value * 100))}%"></div>
+          </div>
+          <span class="membership-value">${formatNumber(value * 100, { maximumFractionDigits: 0 })}%</span>
+        </div>
+      `
+    )
+    .join("");
+
+  elements.signalBadges.innerHTML = [
+    { label: "Bullish", value: signalMix.bullish },
+    { label: "Neutral", value: signalMix.neutral },
+    { label: "Bearish", value: signalMix.bearish },
+  ]
+    .map(
+      (item) => `
+        <div class="signal-badge">
+          <strong>${item.value}</strong>
+          <span>${item.label} indicators</span>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderAiSummary(data) {
+  elements.aiSummaryHeadline.textContent = data.aiSummary.headline;
+  elements.aiSummaryBody.textContent = data.aiSummary.body;
+  elements.aiSummaryPoints.innerHTML = data.aiSummary.bullets
+    .map((bullet) => `<div class="insight-item">${bullet}</div>`)
+    .join("");
+}
+
+function buildSparklinePath(values, height, width, area = false) {
+  if (!Array.isArray(values) || values.length === 0) return "";
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  const step = width / Math.max(values.length - 1, 1);
+
+  const points = values.map((value, index) => {
+    const x = index * step;
+    const y = height - ((value - min) / range) * (height - 14) - 7;
+    return `${index === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`;
+  });
+
+  if (!area) {
+    return points.join(" ");
+  }
+
+  return `${points.join(" ")} L ${width} ${height} L 0 ${height} Z`;
+}
+
+function renderTrend(data) {
+  const directionClass =
+    data.trend.direction === "Uptrend"
+      ? "buy"
+      : data.trend.direction === "Downtrend"
+        ? "sell"
+        : "neutral";
+  elements.trendDirectionChip.textContent = data.trend.direction;
+  elements.trendDirectionChip.className = `mini-chip ${directionClass}`;
+  elements.sparklineLine.setAttribute("d", buildSparklinePath(data.trend.closes, 160, 520));
+  elements.sparklineArea.setAttribute("d", buildSparklinePath(data.trend.closes, 160, 520, true));
+
+  const stats = [
+    { label: "Trend move", value: formatPercent(data.trend.changePercent) },
+    { label: "Volatility", value: formatPercent(data.trend.volatility) },
+    { label: "Range", value: `${formatPrice(data.trend.support, data.currency)} - ${formatPrice(data.trend.resistance, data.currency)}` },
+  ];
+
+  elements.trendStats.innerHTML = stats
+    .map(
+      (stat) => `
+        <div class="trend-stat">
+          <strong>${stat.value}</strong>
+          <span>${stat.label}</span>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderDriverList(target, rows, fallbackLabel) {
+  if (!rows.length) {
+    target.innerHTML = `<div class="driver-card neutral"><strong>No dominant driver</strong><p>${fallbackLabel}</p></div>`;
+    return;
+  }
+
+  target.innerHTML = rows
+    .map(
+      (row) => `
+        <div class="driver-card ${actionClass(row.action)}">
+          <strong>${row.name}</strong>
+          <p>Weight ${formatNumber(row.weight)}. ${row.detail}</p>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderRules(data) {
+  if (!data.rules.length) {
+    elements.ruleList.innerHTML = `<div class="rule-card neutral"><strong>No strong rule activation</strong><p>The current inputs are too balanced for a dominant fuzzy rule.</p></div>`;
+    return;
+  }
+
+  elements.ruleList.innerHTML = data.rules
+    .map(
+      (rule) => `
+        <div class="rule-card ${actionClass(rule.effect)}">
+          <strong>${rule.title}</strong>
+          <p>${rule.description} Strength ${formatNumber(rule.strength)}.</p>
+        </div>
       `
     )
     .join("");
@@ -503,6 +693,12 @@ function updateHeader(data) {
   elements.priceChange.className = `price-change ${priceDirection}`.trim();
   elements.updatedAt.textContent = `Updated ${new Date(data.lastUpdated).toLocaleString()}`;
   renderSnapshot(data);
+  renderFuzzyPanel(data);
+  renderAiSummary(data);
+  renderTrend(data);
+  renderDriverList(elements.bullishDrivers, data.topDrivers.bullish, "Bullish evidence is present but not dominant.");
+  renderDriverList(elements.bearishDrivers, data.topDrivers.bearish, "Bearish evidence is present but not dominant.");
+  renderRules(data);
   renderSavedTickers();
 }
 
@@ -539,7 +735,7 @@ async function refreshMetadata() {
       renderTimeframes();
     }
   } catch (_error) {
-    // Keep client-side defaults if metadata endpoints are unavailable or stale.
+    // Keep client-side defaults if metadata endpoints are unavailable.
   }
 }
 
